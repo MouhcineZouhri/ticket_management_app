@@ -1,6 +1,5 @@
-<<<<<<< HEAD
 # ticket_management_app
-=======
+
 Hi,
 
 https://github.com/user-attachments/assets/0387e1d9-88bf-43f7-8129-793ec22a2ca9
@@ -20,7 +19,4 @@ Additionally,all tests are unit tests, except for the `TicketController`.
 
 under resources you can find sql script for database.
 
-
-
-
->>>>>>> dafdfc809cf05cef69327c6f44051bcb6b94b4c0
+the jar file of swing application is contains in path swing-api-client/target/swing-api-client-1.0.jar.
