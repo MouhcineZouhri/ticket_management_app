@@ -3,7 +3,7 @@ FROM container-registry.oracle.com/database/free:latest
 ENV ORACLE_HOME=/opt/oracle/product/19c/dbhome_1
 ENV ORACLE_SID=ORCL
 ENV ORACLE_PDB=PDB1
-ENV ORACLE_PASSWORD=your_password_here
+ENV ORACLE_PASSWORD=password
 
 EXPOSE 1521 5500
 
