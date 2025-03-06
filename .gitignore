@@ -1,0 +1,71 @@
+swing-api-client/target/
+swing-api-client/!.mvn/wrapper/maven-wrapper.jar
+swing-api-client/!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+swing-api-client/.idea/modules.xml
+swing-api-client/.idea/jarRepositories.xml
+swing-api-client/.idea/compiler.xml
+swing-api-client/.idea/libraries/
+swing-api-client/*.iws
+swing-api-client/*.iml
+swing-api-client/*.ipr
+
+### Eclipse ###
+swing-api-client/.apt_generated
+swing-api-client/.classpath
+swing-api-client/.factorypath
+swing-api-client/.project
+swing-api-client/.settings
+swing-api-client/.springBeans
+swing-api-client/.sts4-cache
+
+### NetBeans ###
+swing-api-client/nbproject/private/
+swing-api-client/nbbuild/
+swing-api-client/dist/
+swing-api-client/nbdist/
+swing-api-client/.nb-gradle/
+swing-api-client/build/
+swing-api-client/!**/src/main/**/build/
+swing-api-client/!**/src/test/**/build/
+
+### VS Code ###
+swing-api-client/.vscode/
+
+### Mac OS ###
+swing-api-client/.DS_Store
+
+ticket_support/HELP.md
+ticket_support/target/
+ticket_support/!.mvn/wrapper/maven-wrapper.jar
+ticket_support/!**/src/main/**/target/
+ticket_support/!**/src/test/**/target/
+
+### STS ###
+ticket_support/.apt_generated
+ticket_support/.classpath
+ticket_support/.factorypath
+ticket_support/.project
+ticket_support/.settings
+ticket_support/.springBeans
+ticket_support/.sts4-cache
+
+### IntelliJ IDEA ###
+ticket_support/.idea
+ticket_support/*.iws
+ticket_support/*.iml
+ticket_support/*.ipr
+
+### NetBeans ###
+ticket_support/nbproject/private/
+ticket_support/nbbuild/
+ticket_support/dist/
+ticket_support/nbdist/
+ticket_support/.nb-gradle/
+ticket_support/build/
+ticket_support/!**/src/main/**/build/
+ticket_support/!**/src/test/**/build/
+
+### VS Code ###
+ticket_support/.vscode/
