@@ -5,6 +5,7 @@ import com.example.ticket_support.dtos.TicketResponseDetails;
 import com.example.ticket_support.entities.Comment;
 import com.example.ticket_support.entities.Ticket;
 import com.example.ticket_support.entities.TicketLog;
+import com.example.ticket_support.entities.User;
 import com.example.ticket_support.enums.Category;
 import com.example.ticket_support.enums.Priority;
 import com.example.ticket_support.enums.TicketStatus;
@@ -63,6 +64,7 @@ class TicketMapperTest {
                 .priority(Priority.HIGH)
                 .category(Category.HARDWARE)
                 .ticketStatus(TicketStatus.NEW)
+                .owner(User.builder().name("mohsin").build())
                 .createdAt(LocalDateTime.of(2024, 2, 23, 10, 30))
                 .build();
 
@@ -94,6 +96,7 @@ class TicketMapperTest {
         assertThat(ticket.getTicketStatus()).isEqualTo(response.getTicketStatus());
         assertThat(ticket.getCreatedAt()).isEqualTo(response.getCreatedAt());
         assertThat(ticket.getPriority()).isEqualTo(response.getPriority());
+        assertThat(response.getCreatorName()).isEqualTo("mohsin");
 
         assertThat(response.getComments()).containsExactly("Customer reported the issue", "Issue escalated to payment team");
         assertThat(response.getTicketStatusHistory()).containsExactly(TicketStatus.NEW,TicketStatus.IN_PROGRESS);

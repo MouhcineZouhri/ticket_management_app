@@ -20,6 +20,7 @@ public class TicketResponseDetails {
     private Category category;
     private TicketStatus ticketStatus;
     private LocalDateTime createdAt;
+    private String creatorName;
     private List<TicketStatus> ticketStatusHistory;
     private List<String> comments;
 }

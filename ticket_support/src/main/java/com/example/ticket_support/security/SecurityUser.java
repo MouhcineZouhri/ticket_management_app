@@ -1,6 +1,7 @@
 package com.example.ticket_support.security;
 
 import com.example.ticket_support.entities.User;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Getter
 public class SecurityUser implements UserDetails {
 
     private final User user;

@@ -16,7 +16,7 @@ public interface TicketService {
 
     TicketResponseDetails getTicketById(Long id);
 
-    TicketResponse createTicket(TicketRequest request);
+    TicketResponse createTicket(String username,TicketRequest request);
 
     TicketResponse changeTicketStatus(Long id , TicketStatus status);
 

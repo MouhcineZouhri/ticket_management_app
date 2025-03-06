@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +61,8 @@ public class TicketController {
 
     @PostMapping
     public ResponseEntity<TicketResponse> createTicket(@RequestBody TicketRequest request) {
-        TicketResponse response = ticketService.createTicket(request);
+        User user =(User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        TicketResponse response = ticketService.createTicket(user.getUsername(),request);
         return ResponseEntity.status(201).body(response);
     }
 

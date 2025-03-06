@@ -21,6 +21,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,7 @@ class TicketServiceJpaTest {
     private TicketServiceJpa ticketService;
 
     private Ticket ticket;
+    private TicketResponse ticketResponse;
     private TicketLog ticketLog;
     private User user;
 
@@ -59,6 +61,14 @@ class TicketServiceJpaTest {
                 .description("Test description")
                 .ticketStatus(TicketStatus.NEW)
                 .createdAt(LocalDateTime.of(2024, 2, 23, 10, 30))
+                .build();
+
+        ticketResponse = TicketResponse.builder()
+                .id(ticket.getId())
+                .title(ticket.getTitle())
+                .description(ticket.getDescription())
+                .ticketStatus(ticket.getTicketStatus())
+                .createdAt(ticket.getCreatedAt())
                 .build();
 
         // Create a mock TicketLog
@@ -76,23 +86,11 @@ class TicketServiceJpaTest {
     }
 
     @Test
-    void getTickets_ShouldReturnListOfTickets_WhenStatusIsProvided() {
+    void getTickets_ShouldReturnListOfTickets_WhenCorrectStatusIsProvided() {
         // Given
         TicketStatus ticketStatus = TicketStatus.NEW;
-        when(ticketRepository.findTicketsByTicketStatus(ticketStatus))
-                .thenReturn(Arrays.asList(ticket));
-
-        when(ticketMapper.ticketResponseFromTicket(ticket)).
-                thenReturn(
-                        TicketResponse
-                                .builder()
-                                .id(1L)
-                                .title("Test Ticket")
-                                .description("Test description")
-                                .ticketStatus(TicketStatus.NEW)
-                                .build()
-                );
-
+        when(ticketRepository.findAllTickets(ticketStatus))
+                .thenReturn(Arrays.asList(ticketResponse));
         // When
         List<TicketResponse> response = ticketService.getTickets(ticketStatus);
 
@@ -105,8 +103,7 @@ class TicketServiceJpaTest {
         assertThat(response.getFirst().getTicketStatus()).isEqualTo(TicketStatus.NEW);
 
         verify(ticketRepository, times(1))
-                .findTicketsByTicketStatus(ticketStatus);
-        verify(ticketRepository, times(0)).findAll();
+                .findAllTickets(ticketStatus);
     }
 
     @Test
@@ -115,28 +112,18 @@ class TicketServiceJpaTest {
         String email = "mohsin@gmail.com";
         TicketStatus ticketStatus = TicketStatus.NEW;
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        when(ticketRepository.findTicketsByOwnerAndTicketStatus(user, ticketStatus)).thenReturn(Arrays.asList(ticket));
-        when(ticketMapper.ticketResponseFromTicket(ticket)).
-                thenReturn(
-                        TicketResponse
-                                .builder()
-                                .id(1L)
-                                .title("Test Ticket")
-                                .description("Test description")
-                                .ticketStatus(TicketStatus.NEW)
-                                .build()
-                );
+        when(ticketRepository.findTicketsByOwnerAndTicketStatus(user, ticketStatus))
+                .thenReturn(Collections.singletonList(ticketResponse));
 
         // When
-        var response = ticketService.getOwnerTickets(email, ticketStatus);
+        List<TicketResponse> response = ticketService.getOwnerTickets(email, ticketStatus);
 
-        // Then
         assertThat(response)
                 .isNotNull()
                 .hasSize(1);
 
-        assertThat(response.getFirst().getId()).isEqualTo(ticket.getId());
-        assertThat(response.getFirst().getTitle()).isEqualTo(ticket.getTitle());
+        assertThat(response.getFirst().getId()).isEqualTo(ticketResponse.getId());
+        assertThat(response.getFirst().getTitle()).isEqualTo(ticketResponse.getTitle());
 
 
         verify(userRepository, times(1)).findByEmail(email);
@@ -183,6 +170,8 @@ class TicketServiceJpaTest {
     @Test
     void createTicket_ShouldCreateTicket() {
         // Given
+        String email = "mohsin@gmail.com";
+
         TicketRequest request = TicketRequest.builder()
                 .title("Test Ticket")
                 .description("Test description")
@@ -190,6 +179,7 @@ class TicketServiceJpaTest {
 
         when(ticketRepository.save(any(Ticket.class))).thenReturn(ticket);
         when(ticketLogRepository.save(any(TicketLog.class))).thenReturn(ticketLog);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(ticketMapper.ticketResponseFromTicket(ticket)).
                 thenReturn(
                         TicketResponse.builder()
@@ -200,7 +190,7 @@ class TicketServiceJpaTest {
                 );
 
         // When
-        TicketResponse response = ticketService.createTicket(request);
+        TicketResponse response = ticketService.createTicket(email, request);
 
         // Then
         assertThat(response)

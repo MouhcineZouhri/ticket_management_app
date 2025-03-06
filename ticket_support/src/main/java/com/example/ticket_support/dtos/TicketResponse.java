@@ -18,4 +18,5 @@ public class TicketResponse {
     private Category category;
     private TicketStatus ticketStatus;
     private LocalDateTime createdAt;
+    private String creatorName;
 }

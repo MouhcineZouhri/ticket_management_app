@@ -45,28 +45,17 @@ public class TicketServiceJpa implements TicketService {
 
     @Override
     public List<TicketResponse> getTickets(TicketStatus ticketStatus) {
-        if (ticketStatus != null)
-            return ticketRepository.findTicketsByTicketStatus(ticketStatus)
-                    .stream().map(
-                            ticketMapper::ticketResponseFromTicket
-                    ).toList();
-
-        return ticketRepository.findAll().stream().map(
-                ticketMapper::ticketResponseFromTicket
-        ).toList();
+        return ticketRepository.findAllTickets(ticketStatus);
     }
 
     @Override
-    public List<TicketResponse> getOwnerTickets(String email, TicketStatus ticketStatus) {
+    public List<TicketResponse> getOwnerTickets(String username, TicketStatus ticketStatus) {
         // always owner exist because function call after authentication
-        User owner = userRepository.findByEmail(email).
+        User owner = userRepository.findByEmail(username).
                 orElse(null);
 
         return ticketRepository
-                .findTicketsByOwnerAndTicketStatus(owner, ticketStatus)
-                .stream()
-                .map(ticketMapper::ticketResponseFromTicket)
-                .toList();
+                .findTicketsByOwnerAndTicketStatus(owner, ticketStatus);
     }
 
     @Override
@@ -78,9 +67,8 @@ public class TicketServiceJpa implements TicketService {
     }
 
     @Override
-    public TicketResponse createTicket(TicketRequest request) {
-        UserDetails currUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User owner = userRepository.findByEmail(currUser.getUsername()).
+    public TicketResponse createTicket(String username, TicketRequest request) {
+        User owner = userRepository.findByEmail(username).
                 orElse(null);
 
         Ticket ticket = Ticket.builder()

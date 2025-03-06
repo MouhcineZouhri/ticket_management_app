@@ -33,6 +33,7 @@ public class TicketMapperManual implements TicketMapper {
                 .category(ticket.getCategory())
                 .comments(ticket.getComments().stream().map(Comment::getText).toList())
                 .ticketStatusHistory(ticket.getTicketLogs().stream().map(TicketLog::getTicketStatus).toList())
+                .creatorName(ticket.getOwner().getName())
                 .build();
     }
 
