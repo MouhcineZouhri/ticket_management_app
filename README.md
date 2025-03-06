@@ -4,12 +4,12 @@ Hi,
 
 https://github.com/user-attachments/assets/1564505e-ccb0-48bc-8d57-742dfc58eee0
 
-IT support account.
+IT support account.<br /> 
 This video showcases the various actions an IT support specialist can perform, including creating a ticket, 
 viewing all tickets, changing status, adding comments, 
 and filtering tickets by ID or status.
 
-Employee account.
+Employee account.<br /> 
 This video highlights the various actions an employee can perform, such as creating a ticket, 
 viewing their own tickets, and filtering by ID or status.
 
