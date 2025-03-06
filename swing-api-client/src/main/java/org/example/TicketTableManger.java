@@ -13,7 +13,7 @@ public class TicketTableManger {
     private DefaultTableModel tableModel;
     private JTable table;
 
-    String[] columnNames = {"ID", "Title",  "Priority", "Category", "TicketStatus", "CreatedAt"};
+    String[] columnNames = {"ID", "creator" , "Title",  "Priority", "Category", "TicketStatus", "CreatedAt"};
 
     // Constructor to initialize the table
     public TicketTableManger(List<Ticket> tickets) {
@@ -34,6 +34,7 @@ public class TicketTableManger {
     private Object[] ticketToRowData(Ticket ticket){
         Object[] rowData = {
                 ticket.getId(),
+                ticket.getCreatorName(),
                 ticket.getTitle(),
                 ticket.getPriority().toString(),
                 ticket.getCategory().toString(),

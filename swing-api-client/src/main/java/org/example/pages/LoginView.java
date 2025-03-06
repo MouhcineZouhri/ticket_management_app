@@ -4,6 +4,7 @@ import org.apache.hc.core5.http.ProtocolException;
 import org.example.ApiClient;
 import org.example.NavigationManager;
 import org.example.TicketTableManger;
+import org.example.UserHolder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +20,7 @@ public class LoginView {
         this.apiClient = apiClient;
         this.navigation = navigation;
         panel = new JPanel(new GridBagLayout());
+
         initializeUI();
     }
 
@@ -85,6 +87,9 @@ public class LoginView {
         try {
             apiClient.login(email, password,
                     response -> {
+                        // add user information
+                        UserHolder.getInstance().setUser(response);
+
                         navigation.registerView("dashboard",
                                 new DashboardView(apiClient, navigation, new TicketTableManger(new ArrayList<>())).getPanel());
                         SwingUtilities.invokeLater(() -> navigation.showView("dashboard"));

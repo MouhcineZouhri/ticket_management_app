@@ -3,6 +3,8 @@ package org.example.pages;
 import org.apache.hc.core5.http.ProtocolException;
 import org.example.ApiClient;
 import org.example.NavigationManager;
+import org.example.enums.Role;
+import org.example.enums.TicketStatus;
 import org.example.models.UserCreateRequest;
 
 import javax.swing.*;
@@ -35,6 +37,8 @@ public class RegisterView {
         JTextField emailField = new JTextField(20);
         JPasswordField passwordField = new JPasswordField(20);
         JPasswordField confirmPasswordField = new JPasswordField(20);
+        JComboBox<Role> roles = new JComboBox<>(Role.values());
+
         JButton registerBtn = new JButton("Register");
         JButton backBtn = new JButton("Back to Login");
 
@@ -67,6 +71,13 @@ public class RegisterView {
         gbc.gridx = 1;
         formPanel.add(confirmPasswordField, gbc);
 
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        formPanel.add(new JLabel("Role:"), gbc);
+
+        gbc.gridx = 1;
+        formPanel.add(roles, gbc);
+
         // Button panel
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
@@ -74,7 +85,7 @@ public class RegisterView {
         buttonPanel.add(registerBtn);
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -89,6 +100,7 @@ public class RegisterView {
                     .email(emailField.getText())
                     .password(passwordField.getText())
                     .confirmPassword(confirmPasswordField.getText())
+                    .role((Role) roles.getSelectedItem())
                     .build();
 
             performRegistration(request);

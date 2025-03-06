@@ -2,21 +2,23 @@ package org.example.pages;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.example.ApiClient;
-import org.example.NavigationManager;
-import org.example.TicketTableManger;
+import org.example.*;
 import org.example.enums.Role;
 import org.example.enums.TicketStatus;
 import org.example.models.Ticket;
 import org.example.models.TicketResponseDetails;
 import org.example.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DashboardView {
+    private static final Logger log = LoggerFactory.getLogger(DashboardView.class);
     private final JPanel panel;
     private final ApiClient apiClient;
     private final NavigationManager navigation;
@@ -27,6 +29,7 @@ public class DashboardView {
         this.navigation = navigation;
         this.tableManager = tableManager;
         panel = new JPanel(new BorderLayout());
+
         initializeUI();
     }
 
@@ -34,12 +37,19 @@ public class DashboardView {
         JTable ticketTable = tableManager.getTable();
         JScrollPane scrollPane = new JScrollPane(ticketTable);
 
+        User currentUser = UserHolder.getInstance().getUser();
+
+        JLabel jLabel = new JLabel(currentUser.getRole().toString() + " : " + currentUser.getName().replace("\"", ""));
         JButton newTicketBtn = new JButton("New Ticket");
         JButton refreshBtn = new JButton("Refresh");
         JButton viewBtn = new JButton("View");
         JButton changeStatusBtn = new JButton("ChangeStatus");
         JTextField searchField = new JTextField(20);
         JComboBox<TicketStatus> statusFilter = new JComboBox<>(TicketStatus.values());
+        JButton logoutBtn = new JButton("Logout");
+
+        // changeStatusBtn only display if user has ITSUPPORT Role
+        changeStatusBtn.setVisible(currentUser.getRole().equals(Role.ITSUPPORT));
 
         // new tickets button
         newTicketBtn.addActionListener(e -> {
@@ -103,7 +113,7 @@ public class DashboardView {
                 apiClient.getTicketById(ticketId, node -> {
                     TicketResponseDetails ticketResponseDetails = TicketResponseDetails.parse(node);
 
-                    navigation.registerView("view_ticket", new TicketView(apiClient, navigation, ticketResponseDetails ).getPanel());
+                    navigation.registerView("view_ticket", new TicketView(apiClient, navigation, ticketResponseDetails).getPanel());
 
                     SwingUtilities.invokeLater(() ->
                             navigation.showView("view_ticket"));
@@ -114,7 +124,15 @@ public class DashboardView {
             }
         });
 
+        logoutBtn.addActionListener(e -> {
+            TokenHolder.getInstance().setToken(null);
+            UserHolder.getInstance().setUser((User) null);
+            navigation.registerView("login" , new LoginView(apiClient, navigation).getPanel());
+            SwingUtilities.invokeLater(() -> navigation.showView("login"));
+        });
+
         JPanel controlPanel = new JPanel();
+        controlPanel.add(jLabel);
         controlPanel.add(newTicketBtn);
         controlPanel.add(refreshBtn);
         controlPanel.add(viewBtn);
@@ -123,6 +141,7 @@ public class DashboardView {
         controlPanel.add(searchField);
         controlPanel.add(new JLabel("Status:"));
         controlPanel.add(statusFilter);
+        controlPanel.add(logoutBtn);
 
         panel.add(controlPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -161,11 +180,14 @@ public class DashboardView {
         dialogPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Add padding
 
         Long ticketId = Long.parseLong(ticketTable.getValueAt(selectedRow, 0).toString());
-        TicketStatus currentTicketStatus = TicketStatus.valueOf(ticketTable.getValueAt(selectedRow, 4).toString());
+        TicketStatus currentTicketStatus = TicketStatus.valueOf(ticketTable.getValueAt(selectedRow, 5).toString());
 
         JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         statusPanel.add(new JLabel("New Status:"));
-        JComboBox<TicketStatus> ticketStatusJCombo = new JComboBox<>(TicketStatus.values());
+        JComboBox<Object> ticketStatusJCombo = new JComboBox<>(
+                Arrays.stream(TicketStatus.values()).filter(ticketStatus -> ticketStatus != TicketStatus.ALL)
+                        .toArray()
+        );
         ticketStatusJCombo.setPreferredSize(new Dimension(150, 30));
         ticketStatusJCombo.setSelectedItem(currentTicketStatus);
         statusPanel.add(ticketStatusJCombo);

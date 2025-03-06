@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.ApiClient;
 import org.example.NavigationManager;
 import org.example.TicketTableManger;
+import org.example.UserHolder;
 import org.example.enums.Role;
 import org.example.enums.TicketStatus;
 import org.example.models.TicketResponseDetails;
+import org.example.models.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,6 +64,8 @@ public class TicketView {
 
         // Section 3: Comments
         JButton addCommentButton = new JButton("Add Comment");
+        User user = UserHolder.getInstance().getUser();
+        addCommentButton.setVisible(user.getRole().equals(Role.ITSUPPORT));
         addCommentButton.addActionListener(e -> {
             // Create comment input dialog
             showCommentDialog();

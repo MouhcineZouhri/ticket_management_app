@@ -1,4 +1,5 @@
 package org.example;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.hc.client5.http.classic.methods.*;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.example.enums.TicketStatus;
 import org.example.models.TicketRequest;
+import org.example.models.Token;
 import org.example.models.UserCreateRequest;
 
 import javax.swing.*;
@@ -23,13 +25,13 @@ import java.util.function.Consumer;
 public class ApiClient {
     private static final String BASE_URL = "http://localhost:8080";
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private String authToken;
 
     public <T> void executeRequest(ClassicHttpRequest request, Consumer<JsonNode> onSuccess, Consumer<String> onError) {
         new Thread(() -> {
             try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-                if (authToken != null) {
-                    request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authToken);
+                Token token = TokenHolder.getInstance().getToken();
+                if (token != null) {
+                    request.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token.getAuthToken());
                 }
 
                 try (CloseableHttpResponse response = httpClient.execute(request)) {
@@ -57,8 +59,11 @@ public class ApiClient {
             try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
                 Header accessToken = response.getHeader("access_token");
                 if (accessToken != null) {
-                    authToken = accessToken.getValue();
-                    SwingUtilities.invokeLater(() -> onSuccess.accept(null));
+                    TokenHolder.getInstance().setToken(new Token(accessToken.getValue()));
+                    String jsonResponse = EntityUtils.toString(response.getEntity());
+                    JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+
+                    SwingUtilities.invokeLater(() -> onSuccess.accept(jsonNode));
                 }
             } catch (ParseException | IOException e) {
                 throw new RuntimeException(e);
@@ -74,7 +79,7 @@ public class ApiClient {
                 "email", request.getEmail(),
                 "password", request.getPassword(),
                 "confirm_password", request.getConfirmPassword(),
-                "role" , "EMPLOYEE"
+                "role", request.getRole().toString()
         );
         httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
         String json = objectMapper.writeValueAsString(jsonMap);
@@ -84,18 +89,12 @@ public class ApiClient {
         executeRequest(httpPost, onSuccess, onError);
     }
 
-    public void getCurrentUser(Consumer<JsonNode> onSuccess, Consumer<String> onError){
-        String url = BASE_URL + "/api/users";
-        HttpGet httpGet = new  HttpGet(URI.create(url));
-        executeRequest(httpGet, onSuccess, onError);
-    }
-
-    public void getTickets(TicketStatus ticketStatus, Consumer<JsonNode> onSuccess, Consumer<String> onError){
+    public void getTickets(TicketStatus ticketStatus, Consumer<JsonNode> onSuccess, Consumer<String> onError) {
         String url = BASE_URL + "/api/tickets";
         if (ticketStatus != TicketStatus.ALL) {
             url += "?ticket_status=" + ticketStatus.toString();
         }
-        HttpGet httpGet = new  HttpGet(URI.create(url));
+        HttpGet httpGet = new HttpGet(URI.create(url));
         executeRequest(httpGet, onSuccess, onError);
     }
 
@@ -120,7 +119,7 @@ public class ApiClient {
         executeRequest(new HttpGet(URI.create(url)), onSuccess, onError);
     }
 
-    public void changeStatus(Long ticketId, TicketStatus ticketStatus,Consumer<JsonNode> onSuccess, Consumer<String> onError) throws JsonProcessingException {
+    public void changeStatus(Long ticketId, TicketStatus ticketStatus, Consumer<JsonNode> onSuccess, Consumer<String> onError) throws JsonProcessingException {
         HttpPut httpPut = new HttpPut(URI.create(BASE_URL + "/api/tickets/" + ticketId));
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> jsonMap = Map.of(
@@ -135,7 +134,7 @@ public class ApiClient {
 
 
     public void addComments(Long ticketId, String commentText, Consumer<JsonNode> onSuccess, Consumer<String> onError) throws JsonProcessingException {
-        HttpPost httpPost = new HttpPost(URI.create(BASE_URL + "/api/tickets/"+ticketId + "/comments"));
+        HttpPost httpPost = new HttpPost(URI.create(BASE_URL + "/api/tickets/" + ticketId + "/comments"));
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> jsonMap = Map.of(
                 "text", commentText

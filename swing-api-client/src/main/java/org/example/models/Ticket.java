@@ -19,6 +19,7 @@ public class Ticket {
     private Category category;
     private TicketStatus ticketStatus;
     private LocalDateTime createdAt;
+    private String creatorName;
 
     public static Ticket parseTicket(JsonNode node){
         return Ticket.builder()
@@ -28,6 +29,7 @@ public class Ticket {
                 .category(Category.valueOf(node.get("category").toString().replace("\"", "")))
                 .ticketStatus(TicketStatus.valueOf(node.get("ticketStatus").toString().replace("\"", "")))
                 .createdAt(LocalDateTime.parse(node.get("createdAt").toString().replace("\"", "")))
+                .creatorName(node.get("creatorName").toString().replace("\"", ""))
                 .build();
     }
 }

@@ -61,7 +61,7 @@ public class TicketController {
 
     @PostMapping
     public ResponseEntity<TicketResponse> createTicket(@RequestBody TicketRequest request) {
-        User user =(User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityUser user =(SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         TicketResponse response = ticketService.createTicket(user.getUsername(),request);
         return ResponseEntity.status(201).body(response);
     }
