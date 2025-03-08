@@ -21,7 +21,7 @@ java -jar swing-api-client-1.0.jar (to run the application).
 
 # deployment
 first we need to create a image for oracle database, please follow this step to create an image. <br />
-**git clone repository : https://github.com/oracle/docker-images.git** (clone oracle/docker-images: repos).<br />
+**git clone https://github.com/oracle/docker-images.git** (clone oracle/docker-images: repository).<br />
 download oracle for lunix system from official website in this application we use 19.3.0 version so download file name should be LINUX.X64_193000_db_home.zip.<br />
 put the download file in path docker-images\OracleDatabase\SingleInstance\dockerfiles\19.3.0 (note: we use 19.3.0 that why put in the path 19.3.0).<br />
 in path docker-images\OracleDatabase\SingleInstance\dockerfiles you will find a script buildContainerImage, we will to create our image.<br />
