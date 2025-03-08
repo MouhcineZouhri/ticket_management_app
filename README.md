@@ -15,11 +15,11 @@ viewing their own tickets, and filtering by ID or status.
 
 under resources you can find sql script for database.
 
-# client jar
+## client jar
 the jar file of swing client application is contains in path swing-api-client/target/swing-api-client-1.0.jar.<br /> 
 java -jar swing-api-client-1.0.jar (to run the application).
 
-# deployment
+## deployment
 - first we need to create a image for oracle database, please follow this step to create an image. <br />
 - **git clone https://github.com/oracle/docker-images.git** (clone oracle/docker-images: repository).<br />
 - download oracle for lunix system from official website, in this application we use 19.3.0 version so download file name should be LINUX.X64_193000_db_home.zip.<br />
