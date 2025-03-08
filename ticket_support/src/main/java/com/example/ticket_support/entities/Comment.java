@@ -6,6 +6,7 @@ import lombok.*;
 @Entity
 @AllArgsConstructor @NoArgsConstructor
 @Builder @Getter @Setter
+@Table(name = "comments")
 public class Comment {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

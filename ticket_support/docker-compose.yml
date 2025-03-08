@@ -1,0 +1,44 @@
+version: '3.8'
+# step to create oracle image
+# after that build image of spring boot application
+# then run the docker compose file to start up the application
+services:
+  # Oracle Database Service
+  my-oracle-db:
+    image: oracle-db:1.0
+    container_name: my-oracle-db
+    environment:
+      - ORACLE_PDB=tickets
+      - ORACLE_PWD=password
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo 'SELECT 1 FROM DUAL;' | sqlplus -S sys/password@//localhost:1521/tickets"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - spring-oracle-network
+
+  # Spring Boot Application Service
+  spring-boot-app:
+    image: ticket_support_app:latest
+    container_name: spring-boot-app
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:oracle:thin:@my-oracle-db:1521/tickets?internal_logon=SYSDBA
+      - SPRING_DATASOURCE_USERNAME=sys
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=oracle.jdbc.OracleDriver
+      - SERVER_PORT=8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      my-oracle-db:
+        condition: service_healthy
+    networks:
+      - spring-oracle-network
+
+networks:
+  spring-oracle-network:
+    driver: bridge

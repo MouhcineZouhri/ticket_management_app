@@ -61,8 +61,8 @@ public class TicketController {
 
     @PostMapping
     public ResponseEntity<TicketResponse> createTicket(@RequestBody TicketRequest request) {
-        SecurityUser user =(SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        TicketResponse response = ticketService.createTicket(user.getUsername(),request);
+        SecurityUser user = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        TicketResponse response = ticketService.createTicket(user.getUsername(), request);
         return ResponseEntity.status(201).body(response);
     }
 
@@ -83,7 +83,9 @@ public class TicketController {
     @PostMapping("/{id}/comments")
     @PreAuthorize("hasAuthority('ITSUPPORT')")
     public ResponseEntity addCommentToTicket(@PathVariable Long id, @RequestBody CommentRequest request) {
-        commentService.createComment(id, request);
+        SecurityUser currentUser = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        commentService.createComment(id, currentUser.getUsername(), request);
         return ResponseEntity.ok().build();
     }
 }

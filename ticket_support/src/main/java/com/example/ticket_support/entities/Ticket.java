@@ -19,6 +19,7 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
 @Builder
+@Table(name = "tickets")
 public class Ticket {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

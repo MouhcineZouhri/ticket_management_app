@@ -16,6 +16,7 @@ import com.example.ticket_support.repositories.TicketLogRepository;
 import com.example.ticket_support.repositories.TicketRepository;
 import com.example.ticket_support.repositories.UserRepository;
 import com.example.ticket_support.services.TicketService;
+import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class TicketServiceJpa implements TicketService {
     private final TicketRepository ticketRepository;
 
@@ -108,6 +110,7 @@ public class TicketServiceJpa implements TicketService {
         ticketLogRepository.save(TicketLog.builder()
                 .ticketStatus(status)
                 .ticket(ticket)
+                .createdAt(LocalDateTime.now())
                 .build());
 
         return ticketMapper.ticketResponseFromTicket(ticket);

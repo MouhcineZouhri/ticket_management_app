@@ -10,9 +10,11 @@ import java.time.LocalTime;
 @Entity
 @AllArgsConstructor @NoArgsConstructor
 @Builder @Getter @Setter
+@Table(name = "ticket_logs")
 public class TicketLog {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "ticket_status")
     private TicketStatus ticketStatus;
 
     @Column(name = "created_at")
