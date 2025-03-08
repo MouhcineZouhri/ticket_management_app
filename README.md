@@ -16,8 +16,8 @@ viewing their own tickets, and filtering by ID or status.
 under resources you can find sql script for database.
 
 ## client jar
-the jar file of swing client application is contains in path swing-api-client/target/swing-api-client-1.0.jar.<br /> 
-java -jar swing-api-client-1.0.jar (to run the application).
+the jar file of swing client application is contains in path swing-api-client/target/swing-api-client-1.0.jar. use this command to start application: <br /> 
+- java -jar swing-api-client-1.0.jar (to run the application).
 
 ## deployment
 - first we need to create a image for oracle database, please follow this step to create an image. <br />
