@@ -17,3 +17,5 @@ under resources you can find sql script for database.
 
 the jar file of swing client application is contains in path swing-api-client/target/swing-api-client-1.0.jar.<br /> 
 java -jar swing-api-client-1.0.jar (to run the application).
+
+# deployment
