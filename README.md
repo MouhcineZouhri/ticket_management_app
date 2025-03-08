@@ -15,7 +15,23 @@ viewing their own tickets, and filtering by ID or status.
 
 under resources you can find sql script for database.
 
+# client jar
 the jar file of swing client application is contains in path swing-api-client/target/swing-api-client-1.0.jar.<br /> 
 java -jar swing-api-client-1.0.jar (to run the application).
 
 # deployment
+first we need to create a image for oracle database, please follow this step to create an image. <br />
+git clone repository : https://github.com/oracle/docker-images.git (clone oracle/docker-images: repos).<br />
+download oracle for lunix system from official website in this application we use 19.3.0 version so download file name should be LINUX.X64_193000_db_home.zip.<br />
+put the download file in path docker-images\OracleDatabase\SingleInstance\dockerfiles\19.3.0 (note: we use 19.3.0 that why put in the path 19.3.0).<br />
+in path docker-images\OracleDatabase\SingleInstance\dockerfiles you will find a script buildContainerImage, we will to create our image.<br />
+./buildContainerImage.sh -e -v 19.3.0 -t oracle-db:1.0. (please run this command with this name).<br />
+now we need to create image for our application ticket_support_app. <br/>
+docker build --platform linux/amd64 -t ticket_support_app. (please make sure that you are in application path) <br />
+in the end we need to run our docker compose <br/>
+docker-compose.yml up <br/>
+before start using client application you need to execute the init.sql script, to create schema of database. <br/>
+
+# end
+Thank you.
+
