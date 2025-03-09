@@ -30,4 +30,8 @@ the jar file of swing client application is contains in path swing-api-client/ta
 - **docker-compose.yml up** (run docker compose to create our network and containers) <br/>
 - **before start using client application you need to execute the init.sql script, to create schema of database**. <br/>
 
+# api documentation
+**http://localhost:8080/swagger-ui/index.html**, Please open this to view all APIs, including input expectations and output results.
+
+![image](https://github.com/user-attachments/assets/a75249fe-d550-4864-a3e3-5f0c113183d0)
 
